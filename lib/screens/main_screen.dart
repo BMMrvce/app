@@ -14,7 +14,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('AppPainter Minimal'),
+        title: Text('Themiz'),
         elevation: 0,
         actions: [
           Consumer<ThemeProvider>(

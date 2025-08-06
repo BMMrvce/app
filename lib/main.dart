@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           return MaterialApp(
-            title: 'AppPainter Minimal',
+            title: 'Themiz',
             theme: themeProvider.currentTheme,
             darkTheme: themeProvider.darkTheme,
             themeMode: themeProvider.themeMode,
