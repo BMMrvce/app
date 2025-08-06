@@ -1,0 +1,31 @@
+# Build outputs
+build/
+.dart_tool/
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Dependencies
+.packages
+pubspec.lock
+
+# Generated files
+*.g.dart
+*.freezed.dart
+
+# Coverage
+coverage/
+
+# Platform-specific build outputs
+android/app/release/
+ios/build/
+web/build/
+windows/build/
+macos/build/
+linux/build/
