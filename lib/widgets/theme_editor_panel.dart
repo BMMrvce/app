@@ -358,34 +358,121 @@ class _ThemeEditorPanelState extends State<ThemeEditorPanel>
   }
 
   void _exportTheme(ThemeProvider themeProvider) async {
-    final theme = themeProvider.getCurrentThemeModel();
-    final success = await ThemeService.exportTheme(theme);
-    
-    if (success) {
+    try {
+      // Show loading indicator
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Theme exported successfully!')),
+        const SnackBar(
+          content: Text('Preparing theme export...'),
+          duration: Duration(seconds: 1),
+        ),
       );
-    } else {
+
+      final theme = themeProvider.getCurrentThemeModel();
+      final success = await ThemeService.exportTheme(theme);
+      
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.check_circle, color: Colors.green),
+                const SizedBox(width: 8),
+                Text('Theme "${theme.name}" exported successfully!'),
+              ],
+            ),
+            backgroundColor: Colors.green[100],
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.error_outline, color: Colors.red),
+                SizedBox(width: 8),
+                Text('Failed to export theme. Please try again.'),
+              ],
+            ),
+            backgroundColor: Colors.redAccent,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to export theme')),
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.error_outline, color: Colors.red),
+              const SizedBox(width: 8),
+              Expanded(child: Text('Export error: ${e.toString()}')),
+            ],
+          ),
+          backgroundColor: Colors.redAccent,
+          behavior: SnackBarBehavior.floating,
+          action: SnackBarAction(
+            label: 'OK',
+            onPressed: () {},
+          ),
+        ),
       );
     }
   }
 
   void _importTheme(ThemeProvider themeProvider) async {
-    final theme = await ThemeService.importTheme();
-    
-    if (theme != null) {
-      themeProvider.applyThemePreset(theme);
-      _nameController.text = theme.name;
-      _descriptionController.text = theme.description;
+    try {
+      final theme = await ThemeService.importTheme();
       
+      if (theme != null) {
+        themeProvider.applyThemePreset(theme);
+        _nameController.text = theme.name;
+        _descriptionController.text = theme.description;
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.check_circle, color: Colors.green),
+                const SizedBox(width: 8),
+                Text('Theme "${theme.name}" imported successfully!'),
+              ],
+            ),
+            backgroundColor: Colors.green[100],
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.info_outline, color: Colors.blue),
+                SizedBox(width: 8),
+                Text('Import cancelled or no valid theme file selected.'),
+              ],
+            ),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Theme imported successfully!')),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to import theme')),
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.error_outline, color: Colors.red),
+              const SizedBox(width: 8),
+              Expanded(child: Text('Import error: ${e.toString()}')),
+            ],
+          ),
+          backgroundColor: Colors.redAccent,
+          behavior: SnackBarBehavior.floating,
+          action: SnackBarAction(
+            label: 'OK',
+            onPressed: () {},
+          ),
+        ),
       );
     }
   }

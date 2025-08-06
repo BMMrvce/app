@@ -2,37 +2,72 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:universal_html/html.dart' as html;
 import '../models/theme_model.dart';
 
 class ThemeService {
   static const String _fileExtension = 'json';
-  static const String _fileTypeGroup = 'Theme Files';
 
   // Export theme to JSON file
   static Future<bool> exportTheme(ThemeModel theme) async {
     try {
+      final jsonString = jsonEncode(theme.toJson());
+      final fileName = '${theme.name.replaceAll(' ', '_').toLowerCase()}_theme.json';
+      
       if (kIsWeb) {
-        // Web implementation would go here
-        return false;
+        // Web implementation using browser download
+        return _exportForWeb(jsonString, fileName);
       } else {
         // Desktop/Mobile implementation
-        String? outputFile = await FilePicker.platform.saveFile(
-          dialogTitle: 'Export Theme',
-          fileName: '${theme.name.replaceAll(' ', '_').toLowerCase()}_theme.json',
-          type: FileType.custom,
-          allowedExtensions: [_fileExtension],
-        );
+        return await _exportForDesktop(jsonString, fileName);
+      }
+    } catch (e) {
+      print('Error exporting theme: $e');
+      return false;
+    }
+  }
 
-        if (outputFile != null) {
-          final file = File(outputFile);
-          final jsonString = jsonEncode(theme.toJson());
-          await file.writeAsString(jsonString);
-          return true;
-        }
+  static bool _exportForWeb(String jsonString, String fileName) {
+    try {
+      // Create blob and download for web
+      final bytes = utf8.encode(jsonString);
+      final blob = html.Blob([bytes], 'application/json');
+      final url = html.Url.createObjectUrlFromBlob(blob);
+      
+      // Create download link and trigger download
+      final anchor = html.AnchorElement(href: url)
+        ..style.display = 'none'
+        ..download = fileName;
+      
+      html.document.body?.append(anchor);
+      anchor.click();
+      html.document.body?.children.remove(anchor);
+      html.Url.revokeObjectUrl(url);
+      
+      return true;
+    } catch (e) {
+      print('Error in web export: $e');
+      return false;
+    }
+  }
+
+  static Future<bool> _exportForDesktop(String jsonString, String fileName) async {
+    try {
+      String? outputFile = await FilePicker.platform.saveFile(
+        dialogTitle: 'Export Theme',
+        fileName: fileName,
+        type: FileType.custom,
+        allowedExtensions: [_fileExtension],
+      );
+
+      if (outputFile != null) {
+        final file = File(outputFile);
+        await file.writeAsString(jsonString);
+        return true;
       }
       return false;
     } catch (e) {
-      print('Error exporting theme: $e');
+      print('Error in desktop export: $e');
       return false;
     }
   }
