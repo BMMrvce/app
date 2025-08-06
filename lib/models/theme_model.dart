@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 part 'theme_model.g.dart';
 
@@ -220,22 +221,44 @@ class TypographyModel {
   Map<String, dynamic> toJson() => _$TypographyModelToJson(this);
 
   TextTheme toTextTheme() {
-    return TextTheme(
-      displayLarge: TextStyle(fontSize: displayLargeFontSize, fontFamily: fontFamily),
-      displayMedium: TextStyle(fontSize: displayMediumFontSize, fontFamily: fontFamily),
-      displaySmall: TextStyle(fontSize: displaySmallFontSize, fontFamily: fontFamily),
-      headlineLarge: TextStyle(fontSize: headlineLargeFontSize, fontFamily: fontFamily),
-      headlineMedium: TextStyle(fontSize: headlineMediumFontSize, fontFamily: fontFamily),
-      headlineSmall: TextStyle(fontSize: headlineSmallFontSize, fontFamily: fontFamily),
-      titleLarge: TextStyle(fontSize: titleLargeFontSize, fontFamily: fontFamily),
-      titleMedium: TextStyle(fontSize: titleMediumFontSize, fontFamily: fontFamily),
-      titleSmall: TextStyle(fontSize: titleSmallFontSize, fontFamily: fontFamily),
-      bodyLarge: TextStyle(fontSize: bodyLargeFontSize, fontFamily: fontFamily),
-      bodyMedium: TextStyle(fontSize: bodyMediumFontSize, fontFamily: fontFamily),
-      bodySmall: TextStyle(fontSize: bodySmallFontSize, fontFamily: fontFamily),
-      labelLarge: TextStyle(fontSize: labelLargeFontSize, fontFamily: fontFamily),
-      labelMedium: TextStyle(fontSize: labelMediumFontSize, fontFamily: fontFamily),
-      labelSmall: TextStyle(fontSize: labelSmallFontSize, fontFamily: fontFamily),
-    );
+    try {
+      // Try to use Google Fonts
+      return GoogleFonts.getTextTheme(fontFamily).copyWith(
+        displayLarge: GoogleFonts.getFont(fontFamily, fontSize: displayLargeFontSize),
+        displayMedium: GoogleFonts.getFont(fontFamily, fontSize: displayMediumFontSize),
+        displaySmall: GoogleFonts.getFont(fontFamily, fontSize: displaySmallFontSize),
+        headlineLarge: GoogleFonts.getFont(fontFamily, fontSize: headlineLargeFontSize),
+        headlineMedium: GoogleFonts.getFont(fontFamily, fontSize: headlineMediumFontSize),
+        headlineSmall: GoogleFonts.getFont(fontFamily, fontSize: headlineSmallFontSize),
+        titleLarge: GoogleFonts.getFont(fontFamily, fontSize: titleLargeFontSize),
+        titleMedium: GoogleFonts.getFont(fontFamily, fontSize: titleMediumFontSize),
+        titleSmall: GoogleFonts.getFont(fontFamily, fontSize: titleSmallFontSize),
+        bodyLarge: GoogleFonts.getFont(fontFamily, fontSize: bodyLargeFontSize),
+        bodyMedium: GoogleFonts.getFont(fontFamily, fontSize: bodyMediumFontSize),
+        bodySmall: GoogleFonts.getFont(fontFamily, fontSize: bodySmallFontSize),
+        labelLarge: GoogleFonts.getFont(fontFamily, fontSize: labelLargeFontSize),
+        labelMedium: GoogleFonts.getFont(fontFamily, fontSize: labelMediumFontSize),
+        labelSmall: GoogleFonts.getFont(fontFamily, fontSize: labelSmallFontSize),
+      );
+    } catch (e) {
+      // Fallback to regular TextStyle if Google Font fails
+      return TextTheme(
+        displayLarge: TextStyle(fontSize: displayLargeFontSize, fontFamily: fontFamily),
+        displayMedium: TextStyle(fontSize: displayMediumFontSize, fontFamily: fontFamily),
+        displaySmall: TextStyle(fontSize: displaySmallFontSize, fontFamily: fontFamily),
+        headlineLarge: TextStyle(fontSize: headlineLargeFontSize, fontFamily: fontFamily),
+        headlineMedium: TextStyle(fontSize: headlineMediumFontSize, fontFamily: fontFamily),
+        headlineSmall: TextStyle(fontSize: headlineSmallFontSize, fontFamily: fontFamily),
+        titleLarge: TextStyle(fontSize: titleLargeFontSize, fontFamily: fontFamily),
+        titleMedium: TextStyle(fontSize: titleMediumFontSize, fontFamily: fontFamily),
+        titleSmall: TextStyle(fontSize: titleSmallFontSize, fontFamily: fontFamily),
+        bodyLarge: TextStyle(fontSize: bodyLargeFontSize, fontFamily: fontFamily),
+        bodyMedium: TextStyle(fontSize: bodyMediumFontSize, fontFamily: fontFamily),
+        bodySmall: TextStyle(fontSize: bodySmallFontSize, fontFamily: fontFamily),
+        labelLarge: TextStyle(fontSize: labelLargeFontSize, fontFamily: fontFamily),
+        labelMedium: TextStyle(fontSize: labelMediumFontSize, fontFamily: fontFamily),
+        labelSmall: TextStyle(fontSize: labelSmallFontSize, fontFamily: fontFamily),
+      );
+    }
   }
 }

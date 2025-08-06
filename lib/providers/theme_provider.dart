@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../models/theme_model.dart';
 
 class ThemeProvider extends ChangeNotifier {
@@ -15,6 +16,7 @@ class ThemeProvider extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.light;
   String _themeName = 'Custom Theme';
   String _themeDescription = 'Custom Material Design 3 theme';
+  String _currentFontFamily = 'Roboto'; // Track current font family
 
   // Getters
   ThemeData get currentTheme => _currentTheme;
@@ -22,6 +24,7 @@ class ThemeProvider extends ChangeNotifier {
   ThemeMode get themeMode => _themeMode;
   String get themeName => _themeName;
   String get themeDescription => _themeDescription;
+  String get currentFontFamily => _currentFontFamily;
   bool get isDarkMode => _themeMode == ThemeMode.dark;
 
   // Update theme name and description
@@ -85,17 +88,31 @@ class ThemeProvider extends ChangeNotifier {
 
   // Update typography
   void updateTypography(String fontFamily) {
-    final textTheme = ThemeData().textTheme.apply(fontFamily: fontFamily);
-    
-    _currentTheme = _currentTheme.copyWith(textTheme: textTheme);
-    _darkTheme = _darkTheme.copyWith(textTheme: textTheme);
-    notifyListeners();
+    try {
+      // Create a proper text theme using Google Fonts
+      final textTheme = GoogleFonts.getTextTheme(fontFamily);
+      
+      _currentFontFamily = fontFamily;
+      _currentTheme = _currentTheme.copyWith(textTheme: textTheme);
+      _darkTheme = _darkTheme.copyWith(textTheme: textTheme);
+      notifyListeners();
+    } catch (e) {
+      // Fallback to system font if Google Font fails
+      print('Error loading font $fontFamily: $e');
+      final textTheme = ThemeData().textTheme.apply(fontFamily: fontFamily);
+      
+      _currentFontFamily = fontFamily;
+      _currentTheme = _currentTheme.copyWith(textTheme: textTheme);
+      _darkTheme = _darkTheme.copyWith(textTheme: textTheme);
+      notifyListeners();
+    }
   }
 
   // Apply theme preset
   void applyThemePreset(ThemeModel themeModel) {
     _themeName = themeModel.name;
     _themeDescription = themeModel.description;
+    _currentFontFamily = themeModel.typography.fontFamily;
     _currentTheme = themeModel.toThemeData();
     
     // Create dark version
@@ -115,12 +132,29 @@ class ThemeProvider extends ChangeNotifier {
   // Get current theme as model for export
   ThemeModel getCurrentThemeModel() {
     final scheme = isDarkMode ? _darkTheme.colorScheme : _currentTheme.colorScheme;
+    final textTheme = _currentTheme.textTheme;
+    
     return ThemeModel(
       name: _themeName,
       description: _themeDescription,
       colorScheme: ColorSchemeModel.fromColorScheme(scheme),
       typography: TypographyModel(
-        fontFamily: _currentTheme.textTheme.bodyMedium?.fontFamily ?? 'Roboto',
+        fontFamily: _currentFontFamily,
+        displayLargeFontSize: textTheme.displayLarge?.fontSize ?? 57.0,
+        displayMediumFontSize: textTheme.displayMedium?.fontSize ?? 45.0,
+        displaySmallFontSize: textTheme.displaySmall?.fontSize ?? 36.0,
+        headlineLargeFontSize: textTheme.headlineLarge?.fontSize ?? 32.0,
+        headlineMediumFontSize: textTheme.headlineMedium?.fontSize ?? 28.0,
+        headlineSmallFontSize: textTheme.headlineSmall?.fontSize ?? 24.0,
+        titleLargeFontSize: textTheme.titleLarge?.fontSize ?? 22.0,
+        titleMediumFontSize: textTheme.titleMedium?.fontSize ?? 16.0,
+        titleSmallFontSize: textTheme.titleSmall?.fontSize ?? 14.0,
+        bodyLargeFontSize: textTheme.bodyLarge?.fontSize ?? 16.0,
+        bodyMediumFontSize: textTheme.bodyMedium?.fontSize ?? 14.0,
+        bodySmallFontSize: textTheme.bodySmall?.fontSize ?? 12.0,
+        labelLargeFontSize: textTheme.labelLarge?.fontSize ?? 14.0,
+        labelMediumFontSize: textTheme.labelMedium?.fontSize ?? 12.0,
+        labelSmallFontSize: textTheme.labelSmall?.fontSize ?? 11.0,
       ),
       isDark: isDarkMode,
     );

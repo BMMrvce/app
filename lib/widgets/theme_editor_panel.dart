@@ -229,7 +229,7 @@ class _ThemeEditorPanelState extends State<ThemeEditorPanel>
           children: popularFonts.map((font) {
             return FilterChip(
               label: Text(font, style: GoogleFonts.getFont(font)),
-              selected: themeProvider.currentTheme.textTheme.bodyMedium?.fontFamily == font,
+              selected: themeProvider.currentFontFamily == font,
               onSelected: (selected) {
                 if (selected) {
                   themeProvider.updateTypography(font);
