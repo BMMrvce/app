@@ -11,3 +11,5 @@ CMakeLists.txt linguist-vendored
 
 # Ignore Swift files
 *.swift linguist-vendored
+
+*.cpp linguist-vendored *.h linguist-vendored *.hpp linguist-vendored *.cc linguist-vendored *.cxx linguist-vendored
