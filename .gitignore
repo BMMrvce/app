@@ -29,3 +29,16 @@ web/build/
 windows/build/
 macos/build/
 linux/build/
+
+
+# Ignore CMake files
+*.cmake linguist-vendored
+
+# Ignore HTML files
+*.html linguist-vendored
+
+# Ignore Swift files
+*.swift linguist-vendored
+
+# Ignore C files
+*.c linguist-vendored
