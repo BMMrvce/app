@@ -1,0 +1,13 @@
+# Ignore CMake files
+CMakeLists.txt linguist-vendored
+*.cmake linguist-vendored
+
+# Ignore HTML files
+*.html linguist-vendored
+
+# Ignore C files
+*.c linguist-vendored
+*.h linguist-vendored
+
+# Ignore Swift files
+*.swift linguist-vendored
