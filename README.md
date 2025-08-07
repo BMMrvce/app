@@ -1,4 +1,4 @@
-# Themiz
+# AppPainter Minimal
 
 A minimal Flutter application for creating and customizing Material Design 3 themes, inspired by the original AppPainter project.
 
@@ -154,4 +154,8 @@ This project is inspired by the original AppPainter by zeshuaro and is created f
 
 ## Contributing
 
-A project by B M Madhuchandra And @chandan-athreya-s
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
